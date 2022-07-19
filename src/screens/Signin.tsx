@@ -1,4 +1,4 @@
-import React from "react";
+import React = require("react");
 import { VStack, Heading } from "native-base";
 
 export function SignIn() {

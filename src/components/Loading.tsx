@@ -1,4 +1,4 @@
-import React from 'react';
+import React = require('react');
 import { Center, Spinner } from 'native-base';
 
 export function Loading() {

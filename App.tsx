@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React = require('react');
 import { NativeBaseProvider, StatusBar } from 'native-base';
 import { SignIn } from './src/screens/Signin';
 import { Loading } from './src/components/Loading';
