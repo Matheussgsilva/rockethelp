@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { HStack, IconButton, VStack, useTheme, Heading, Text, FlatList, Center } from 'native-base';
 import { Filter } from '../components/Filter';
 import { Order, OrderProps } from '../components/Order';
@@ -15,6 +16,11 @@ export function Home() {
         status: 'open',
     }])
     const { colors } = useTheme()
+    const navigation = useNavigation()
+
+    function handleNewOrder(){
+        navigation.navigate('new')
+    }
 
   return (
     <VStack flex={1} pb={6} bg='gray.700' >
@@ -71,7 +77,7 @@ export function Home() {
                     </Center>
                 )}
             />
-            <Button title='Nova solicitação' />
+            <Button title='Nova solicitação' onPress={handleNewOrder} />
         </VStack>
     </VStack>
   );
