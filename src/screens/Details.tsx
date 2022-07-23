@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useRoute } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import { VStack } from 'native-base';
+import { VStack, HStack, useTheme, Text, ScrollView } from 'native-base';
 import { Header } from '../components/Header';
+import { Loading } from '../components/Loading';
 import { OrderProps } from '../components/Order';
+import { CardDetails } from '../components/CardDetails';
 import { OrderFirestoreDTO } from '../DTO/OrderFirestoreDTO';
 import { dateFormat } from '../utils/firestoreDateFormat';
-import { Loading } from '../components/Loading';
+import { CircleWavyCheck, Hourglass, DesktopTower, Clipboard } from 'phosphor-react-native'
+import { Input } from '../components/Input';
+import { Button } from '../components/Button';
 
 type RouteParams = {
   orderId: string;
@@ -25,6 +29,7 @@ export function Details() {
 
   const route = useRoute()
   const { orderId } = route.params as RouteParams
+  const { colors } = useTheme()
 
   useEffect(() => {
     firestore()
@@ -57,6 +62,54 @@ export function Details() {
   return (
     <VStack flex={1} bg='gray.700' >
         <Header title='Solicitação' />
+        <HStack bg='gray.500' justifyContent='center' p={4}>
+          {
+            order.status === 'closed'
+            ? <CircleWavyCheck size={22} color={colors.green[300]} />
+            : <Hourglass size={22} color={colors.secondary[700]} />
+          }
+          <Text
+            fontSize='sm'
+            color={order.status === 'closed' ? colors.green[300] : colors.secondary[700]}
+            ml={2}
+            textTransform='uppercase'
+          >
+            {order.status === 'closed' ? 'finalizado' : 'em andamento'}
+          </Text>
+        </HStack>
+        <ScrollView mx={5} showsVerticalScrollIndicator={false} >
+          <CardDetails 
+            title='equipamento'
+            description={`Patrimonio ${order.patrimony}`}
+            icon={DesktopTower}
+            footer={order.when}
+          />
+          <CardDetails 
+            title='Descrição do problema'
+            description={order.description}
+            icon={Clipboard}
+          />
+          <CardDetails 
+            title='solução'
+            icon={CircleWavyCheck}
+            footer={order.closed && `Encerrado em ${order.closed}`}
+          >
+            <Input 
+              placeholder='Descrição da solução'
+              onChangeText={setSolution}
+              h={24}
+              textAlignVertical='top'
+              multiline
+            />
+          </CardDetails>
+        </ScrollView>
+        {
+          order.status === 'open' &&
+            <Button 
+              title='Encerrar solicitação'
+              m={5}
+            />
+        }
     </VStack>
   );
 }
